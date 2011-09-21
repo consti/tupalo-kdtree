@@ -144,7 +144,8 @@ static VALUE kdtree_initialize(VALUE kdtree, VALUE arg)
             rb_funcall2(io, rb_intern("binmode"), 0, 0);
         }
 
-        struct rb_io_t *fptr = RFILE(rb_io_taint_check(io))->fptr;
+        rb_io_t *fptr;
+        GetOpenFile(rb_io_taint_check(io), fptr);
         rb_io_check_readable(fptr);
 
         // check magic
