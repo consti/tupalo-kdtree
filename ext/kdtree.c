@@ -78,7 +78,7 @@ static void kdtree_free(struct kdtree_data *kdtreep)
     }
 }
 
-static void read_all(struct rb_io_t *fptr, char *buf, int len)
+static void read_all(rb_io_t *fptr, char *buf, int len)
 {
     while (len > 0) {
         int n = rb_io_fread(buf, len, rb_io_stdio_file (fptr));
