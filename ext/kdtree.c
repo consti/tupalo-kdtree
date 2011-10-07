@@ -78,7 +78,7 @@ static void kdtree_free(struct kdtree_data *kdtreep)
     }
 }
 
-static void read_all(struct rb_io_t *fptr, char *buf, int len)
+static void read_all(rb_io_t *fptr, char *buf, int len)
 {
     while (len > 0) {
         int n = rb_io_fread(buf, len, rb_io_stdio_file (fptr));
@@ -125,15 +125,14 @@ static VALUE kdtree_initialize(VALUE kdtree, VALUE arg)
         for (i = 0; i < RARRAY_LEN(points); ++i) {
             struct kdtree_node *n = kdtreep->nodes + i;
             
-            VALUE ptr = RARRAY_PTR(points)[i];
+            VALUE ptr = rb_ary_entry(points, i);
             VALUE v = rb_check_array_type(ptr);
             if (NIL_P(v) || RARRAY_LEN(v) != 3) {
                 continue;
             }
-            VALUE *a = RARRAY_PTR(ptr);
-            n->x = NUM2DBL(a[0]);
-            n->y = NUM2DBL(a[1]);        
-            n->id = NUM2INT(a[2]);
+            n->x = NUM2DBL(rb_ary_entry(v, 0));
+            n->y = NUM2DBL(rb_ary_entry(v, 1));
+            n->id = NUM2INT(rb_ary_entry(v, 2));
         }
 
         // now build the tree
@@ -144,7 +143,8 @@ static VALUE kdtree_initialize(VALUE kdtree, VALUE arg)
             rb_funcall2(io, rb_intern("binmode"), 0, 0);
         }
 
-        struct rb_io_t *fptr = RFILE(rb_io_taint_check(io))->fptr;
+        rb_io_t *fptr;
+        GetOpenFile(rb_io_taint_check(io), fptr);
         rb_io_check_readable(fptr);
 
         // check magic

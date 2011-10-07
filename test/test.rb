@@ -1,4 +1,4 @@
-require "#{File.expand_path(File.dirname(__FILE__))}/../ext/kdtree.o"
+require "#{File.expand_path(File.dirname(__FILE__))}/../ext/kdtree.so"
 require "test/unit"
 require "tempfile"
 
